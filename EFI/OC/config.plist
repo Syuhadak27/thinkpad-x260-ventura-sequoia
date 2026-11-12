@@ -1289,7 +1289,7 @@
                     <key>BundlePath</key>
                     <string>BlueToolFixup-VENTURA.kext</string>
                     <key>Comment</key>
-                    <string>V2.6.7 | BT on macOS 12+</string>
+                    <string>V2.7.2 | BT on macOS 12+ (fix scan on 13.3+)</string>
                     <key>Enabled</key>
                     <true/>
                     <key>ExecutablePath</key>
@@ -1307,7 +1307,7 @@
                     <key>BundlePath</key>
                     <string>YogaSMC-VENTURA.kext</string>
                     <key>Comment</key>
-                    <string>V1.5.3 | ThinkPad Fn keys</string>
+                    <string>V1.5.3 | ThinkPad battery limit + Fn keys</string>
                     <key>Enabled</key>
                     <true/>
                     <key>ExecutablePath</key>
@@ -1397,7 +1397,7 @@
                     <key>BundlePath</key>
                     <string>IntelBTPatcher-SEQUOIA.kext</string>
                     <key>Comment</key>
-                    <string>V2.5.0 | BT patcher (disabled: panics on Sequoia)</string>
+                    <string>V2.5.0 | BT patcher (off on Sequoia: panic; BlueToolFixup handles scan)</string>
                     <key>Enabled</key>
                     <false/>
                     <key>ExecutablePath</key>
@@ -1415,11 +1415,29 @@
                     <key>BundlePath</key>
                     <string>BlueToolFixup-SEQUOIA.kext</string>
                     <key>Comment</key>
-                    <string>V2.7.2 | BT on macOS 12+</string>
+                    <string>V2.7.2 | BT on macOS 12+ (NVRAM vars set)</string>
                     <key>Enabled</key>
                     <true/>
                     <key>ExecutablePath</key>
                     <string>Contents/MacOS/BlueToolFixup</string>
+                    <key>MaxKernel</key>
+                    <string>24.99.99</string>
+                    <key>MinKernel</key>
+                    <string>24.0.0</string>
+                    <key>PlistPath</key>
+                    <string>Contents/Info.plist</string>
+                </dict>
+                <dict>
+                    <key>Arch</key>
+                    <string>x86_64</string>
+                    <key>BundlePath</key>
+                    <string>YogaSMC-SEQUOIA.kext</string>
+                    <key>Comment</key>
+                    <string>V1.5.3 | ThinkPad battery limit + Fn keys</string>
+                    <key>Enabled</key>
+                    <true/>
+                    <key>ExecutablePath</key>
+                    <string>Contents/MacOS/YogaSMC</string>
                     <key>MaxKernel</key>
                     <string>24.99.99</string>
                     <key>MinKernel</key>
@@ -1672,6 +1690,10 @@
                     <integer>0</integer>
                     <key>SystemAudioVolume</key>
                     <data>Rg==</data>
+                    <key>bluetoothExternalDongleFailed</key>
+                    <data>AA==</data>
+                    <key>bluetoothInternalControllerInfo</key>
+                    <data>AAAAAAAAAAAAAAAAAAA=</data>
                     <key>boot-args</key>
                     <string>keepsyms=1</string>
                     <key>csr-active-config</key>

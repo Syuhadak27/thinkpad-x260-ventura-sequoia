@@ -16,7 +16,7 @@ EFI OpenCore untuk ThinkPad X260 (Skylake). Satu folder EFI, dipakai untuk dua v
 
 Ini EFI OpenCore yang saya pakai di ThinkPad X260 untuk menjalankan **macOS Ventura 13** dan **macOS Sequoia 15**. Kext Ventura dan Sequoia dipisah lewat `MinKernel` / `MaxKernel`, jadi tidak perlu ganti `config.plist` tiap mau pindah sistem.
 
-Yang sudah jalan: grafis, audio, keyboard, trackpad, baterai, brightness, USB, Ethernet, sleep/wake, dan card reader. Yang belum: **Bluetooth** (dua-duanya) dan **WiFi di Sequoia** yang harus lewat HeliPort.
+Yang sudah jalan: grafis, audio, keyboard, trackpad, baterai + limit cas baterai, brightness, USB, Ethernet, sleep/wake, card reader, dan Bluetooth. Yang belum: **WiFi di Sequoia** yang harus lewat HeliPort, serta AirDrop/Continuity karena keterbatasan kartu Intel.
 
 ## Spek
 
@@ -36,7 +36,7 @@ Yang sudah jalan: grafis, audio, keyboard, trackpad, baterai, brightness, USB, E
 | Port | 3× USB 3.0, HDMI, mini DisplayPort, RJ45, audio 3.5 mm, SD |
 | Baterai | Internal + external (47/68 Wh) |
 | SMBIOS | MacBookPro15,2 |
-| Bootloader | OpenCore |
+| Bootloader | OpenCore 1.0.8 |
 
 Beberapa unit X260 keluar dengan i3-6100U atau i7-6600U. EFI-nya tetap sama, yang beda cuma hasil benchmark. :)
 
@@ -49,6 +49,7 @@ Beberapa unit X260 keluar dengan i3-6100U atau i7-6600U. EFI-nya tetap sama, yan
 | Keyboard | ✅ | ✅ | VoodooPS2 |
 | Trackpad | ✅ | ✅ | VoodooRMI + VoodooSMBus |
 | Baterai | ✅ | ✅ | SMCBatteryManager + ECEnabler |
+| Limit cas baterai | ✅ | ✅ | YogaSMC + SSDT-THINK; ikon petir berubah jadi colokan saat limit tercapai |
 | Brightness | ✅ | ✅ | AppleBacklightSmoother + BrightnessKeys |
 | Sleep / Wake | ✅ | ✅ | HibernationFixup + RTCMemoryFixup |
 | USB | ✅ | ✅ | USBMap |
@@ -56,7 +57,7 @@ Beberapa unit X260 keluar dengan i3-6100U atau i7-6600U. EFI-nya tetap sama, yan
 | SD Card | ✅ | ✅ | RealtekCardReader |
 | Webcam | ✅ | ✅ | USB |
 | WiFi | ✅ Native | ⚠️ HeliPort | Lihat bagian WiFi |
-| Bluetooth | ❌ | ❌ | Kedetect, tapi tidak mau connect |
+| Bluetooth | ✅ | ✅ | Intel 8260 (8087:0A2B), bisa scan + connect |
 | Fingerprint | ❌ | ❌ | Tidak ada driver |
 | AirDrop / Continuity | ❌ | ❌ | Keterbatasan WiFi Intel |
 
@@ -66,16 +67,30 @@ Beberapa unit X260 keluar dengan i3-6100U atau i7-6600U. EFI-nya tetap sama, yan
 
 **Sequoia** — pakai `itlwm-Sequoia.kext` + [HeliPort](https://github.com/OpenIntelWireless/HeliPort). WiFi **tidak akan muncul di menu bar**; scan dan connect dilakukan dari HeliPort. Ini memang cara kerjanya, bukan bug.
 
-> Kalau di Sequoia WiFi terlihat mati atau tidak ada jaringan, buka HeliPort(file terlampir)
+> Kalau di Sequoia WiFi terlihat mati atau tidak ada jaringan, buka HeliPort (file terlampir).
 
 ## Bluetooth
 
-Belum jalan di dua-duanya. Kext `IntelBluetoothFirmware`, `IntelBTPatcher`, dan `BlueToolFixup` sudah dimuat, adapter juga kedetect, tapi tetap tidak mau connect atau pairing. Sudah coba beberapa kombinasi, hasilnya sama.
+Bluetooth Intel 8260 (`8087:0A2B`) sekarang jalan di **Ventura** dan **Sequoia**: bisa dinyalakan, scan perangkat, pairing, dan connect. Yang dipakai:
 
-Kalau butuh Bluetooth, pakai dongle USB yang didukung macOS. Untuk sekarang jangan buang waktu reinstall kext atau reset NVRAM terus-terusan.
+| macOS | Kext |
+|---|---|
+| Ventura | `IntelBluetoothFirmware-VENTURA` + `IntelBTPatcher-VENTURA` + `BlueToolFixup-VENTURA` 2.7.2 |
+| Sequoia | `IntelBluetoothFirmware-SEQUOIA` + `BlueToolFixup-SEQUOIA` 2.7.2 |
+
+Penyebab sebelumnya cuma bisa aktif tapi tidak bisa scan: `BlueToolFixup` versi lama (2.6.7) belum punya patch power-status untuk macOS 13.3+, dan NVRAM Bluetooth belum diisi. Di Sequoia, `IntelBTPatcher` 2.5.0 dimatikan karena bikin panic; patch scan ditangani `BlueToolFixup` 2.7.2.
+
+`BlueToolFixup` 2.7.x butuh dua variabel NVRAM ini. Sudah ditambahkan di `config.plist`:
+
+- `bluetoothExternalDongleFailed` = `00`
+- `bluetoothInternalControllerInfo` = `0000000000000000000000000000`
+
+Kalau habis reset NVRAM, biarkan OpenCore yang menulis ulang nilainya saat boot. Setelah mengganti kext Bluetooth, lakukan **shutdown lalu nyalakan lagi (cold boot)**, bukan restart, supaya firmware adapter ikut ke-reload.
+
+Catatan: pairing ke iPhone/iPad memang sering gagal di Hackintosh/Intel Bluetooth karena batasan stack Apple. Tes dengan mouse, keyboard, atau headset Bluetooth. Kalau setelah cold boot masih tidak bisa scan, cek `kextstat | grep -E 'IntelBluetooth|BlueTool'` dan pastikan tidak ada sisa kext Bluetooth di `/Library/Extensions`; opsi terakhir tambahkan `-btlfxallowanyaddr` ke `boot-args`. Kalau butuh Bluetooth yang benar-benar native, tetap paling aman pakai dongle USB Broadcom/CSR yang didukung macOS.
 
 ## Screenshot
-
+[Picker](image/picker.jpg)
 ### Ventura 13
 
 | | |
@@ -116,8 +131,8 @@ Kext utama yang dipakai:
 | WiFi Ventura | AirportItlwm 2.3.0 |
 | WiFi Sequoia | itlwm 2.3.0 |
 | Ethernet | IntelMausi 1.0.8 |
-| Bluetooth | IntelBluetoothFirmware + IntelBTPatcher + BlueToolFixup |
-| Baterai | SMCBatteryManager + ECEnabler |
+| Bluetooth | IntelBluetoothFirmware + IntelBTPatcher (Ventura) + BlueToolFixup 2.7.2 |
+| Baterai | SMCBatteryManager + ECEnabler + YogaSMC 1.5.3 |
 | Trackpad | VoodooRMI 1.4.3 + VoodooSMBus 3.0 |
 | Keyboard | VoodooPS2Controller 2.3.7 |
 | Card reader | RealtekCardReader 0.9.7 |
@@ -130,7 +145,10 @@ Kext utama yang dipakai:
 - `SecureBootModel` diset `Disabled`.
 - SIP aktif secara default (`csr-active-config` = `00000000`). Bisa di-toggle dari menu picker lewat `ToggleSipEntry.efi`.
 - SMBIOS `MacBookPro15,2`. Serial, MLB, UUID, dan ROM di `config.plist` sebaiknya diganti punya sendiri sebelum pakai iCloud atau iMessage.
-- Kext Ventura dibatasi kernel `22.x`, Sequoia `24.x`. Karena itu dua versi bisa tinggal di satu EFI.
+- Kext Ventura dibatasi kernel `22.x`, Sequoia `24.x`. Karena itu dua versi bisa tinggal di satu EFI. `YogaSMC-VENTURA` dan `YogaSMC-SEQUOIA` juga dipisah lewat `MinKernel` / `MaxKernel`, walaupun isinya sama.
+- `YogaSMC` dipakai di dua versi supaya pembacaan EC ThinkPad (termasuk status limit cas baterai) dan ikon baterai konsisten. Saat limit tercapai, ikon petir berubah jadi ikon colokan.
+- NVRAM Bluetooth diisi otomatis oleh `config.plist`: `bluetoothExternalDongleFailed` = `00`, `bluetoothInternalControllerInfo` = 14 byte nol.
+- `oldConfig.plist` disimpan sebagai backup konfigurasi lama, bukan yang dipakai OpenCore.
 - Picker pakai OpenCanopy dengan tema GoldenGate, timeout 5 detik.
 
 ## Sebelum dipakai
@@ -138,11 +156,12 @@ Kext utama yang dipakai:
 1. Backup EFI yang sekarang.
 2. Mount partisi EFI, copy folder `EFI` ke root partisi.
 3. Generate SMBIOS baru kalau perlu iCloud/iMessage.
-4. Di BIOS: UEFI only, Secure Boot off, VT-d off. Kalau CFG Lock masih aktif, biarkan `AppleXcpmCfgLock` menyala.
+4. Di BIOS: UEFI only, Secure Boot off, VT-d off. Kalau CFG Lock masih aktif, biarkan `AppleXcpmCfgLock` menyala. Setting limit cas baterai (kalau ada) diatur dari BIOS/Windows Lenovo, bukan dari macOS.
 5. Khusus Sequoia, install HeliPort dulu sebelum tes WiFi.
+6. Setelah copy EFI, shutdown penuh lalu nyalakan lagi. Ini penting untuk Bluetooth dan battery charge limit supaya EC/firmware dibaca ulang.
 
 ## Credit
 
-Terima kasih ke Acidanthera (OpenCore, Lilu, VirtualSMC, WhateverGreen, AppleALC), OpenIntelWireless (AirportItlwm, itlwm, HeliPort), OpenCore Legacy Patcher, dan semua developer kext yang dipakai di sini.
+Terima kasih ke Acidanthera (OpenCore, Lilu, VirtualSMC, WhateverGreen, AppleALC, BrcmPatchRAM/BlueToolFixup), OpenIntelWireless (AirportItlwm, itlwm, IntelBluetoothFirmware, IntelBTPatcher, HeliPort), zhen-zen (YogaSMC), OpenCore Legacy Patcher, dan semua developer kext yang dipakai di sini.
 
 ---

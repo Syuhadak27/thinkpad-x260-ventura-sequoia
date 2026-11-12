@@ -125,7 +125,9 @@
 						<key>UsbConnector</key>
 						<integer>3</integer>
 						<key>port</key>
-						<string>09000000</string>
+						<data>
+						CQAAAA==
+						</data>
 					</dict>
 					<key>HS10</key>
 					<dict>
