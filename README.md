@@ -90,7 +90,7 @@ Kalau habis reset NVRAM, biarkan OpenCore yang menulis ulang nilainya saat boot.
 Catatan: pairing ke iPhone/iPad memang sering gagal di Hackintosh/Intel Bluetooth karena batasan stack Apple. Tes dengan mouse, keyboard, atau headset Bluetooth. Kalau setelah cold boot masih tidak bisa scan, cek `kextstat | grep -E 'IntelBluetooth|BlueTool'` dan pastikan tidak ada sisa kext Bluetooth di `/Library/Extensions`; opsi terakhir tambahkan `-btlfxallowanyaddr` ke `boot-args`. Kalau butuh Bluetooth yang benar-benar native, tetap paling aman pakai dongle USB Broadcom/CSR yang didukung macOS.
 
 ## Screenshot
-[Picker](image/picker.jpg)
+![Picker](image/picker.jpg)
 ### Ventura 13
 
 | | |
