@@ -430,8 +430,6 @@
                 <false/>
                 <key>AvoidRuntimeDefrag</key>
                 <true/>
-                <key>ClearTaskSwitchBit</key>
-                <false/>
                 <key>DevirtualiseMmio</key>
                 <false/>
                 <key>DisableSingleUser</key>
@@ -443,8 +441,6 @@
                 <key>EnableSafeModeSlide</key>
                 <true/>
                 <key>EnableWriteUnprotector</key>
-                <true/>
-                <key>FixupAppleEfiImages</key>
                 <true/>
                 <key>ForceBooterSignature</key>
                 <false/>
@@ -1499,8 +1495,6 @@
                 <false/>
                 <key>DisableIoMapper</key>
                 <true/>
-                <key>DisableIoMapperMapping</key>
-                <false/>
                 <key>DisableLinkeditJettison</key>
                 <true/>
                 <key>DisableRtcChecksum</key>
@@ -1558,10 +1552,8 @@
                 <false/>
                 <key>HideAuxiliary</key>
                 <true/>
-                <key>InstanceIdentifier</key>
-                <string></string>
                 <key>LauncherOption</key>
-                <string>Disabled</string>
+                <string>Full</string>
                 <key>LauncherPath</key>
                 <string>Default</string>
                 <key>PickerAttributes</key>
@@ -1697,7 +1689,7 @@
                     <key>boot-args</key>
                     <string>keepsyms=1</string>
                     <key>csr-active-config</key>
-                    <data>AAAAAA==</data>
+                    <data>AwgAAA==</data>
                     <key>prev-lang:kbd</key>
                     <string>en-US:0</string>
                     <key>run-efi-updater</key>
@@ -1876,8 +1868,6 @@
                     <string>HFS+ Driver</string>
                     <key>Enabled</key>
                     <true/>
-                    <key>HideVerbose</key>
-                    <false/>
                     <key>LoadEarly</key>
                     <false/>
                     <key>Path</key>
@@ -1890,8 +1880,6 @@
                     <string></string>
                     <key>Enabled</key>
                     <true/>
-                    <key>HideVerbose</key>
-                    <false/>
                     <key>LoadEarly</key>
                     <false/>
                     <key>Path</key>
@@ -1904,8 +1892,6 @@
                     <string></string>
                     <key>Enabled</key>
                     <true/>
-                    <key>HideVerbose</key>
-                    <false/>
                     <key>LoadEarly</key>
                     <false/>
                     <key>Path</key>
@@ -1918,8 +1904,6 @@
                     <string></string>
                     <key>Enabled</key>
                     <true/>
-                    <key>HideVerbose</key>
-                    <false/>
                     <key>LoadEarly</key>
                     <false/>
                     <key>Path</key>
@@ -1932,8 +1916,6 @@
                     <string></string>
                     <key>Enabled</key>
                     <true/>
-                    <key>HideVerbose</key>
-                    <false/>
                     <key>LoadEarly</key>
                     <false/>
                     <key>Path</key>
@@ -1946,8 +1928,6 @@
                     <string></string>
                     <key>Enabled</key>
                     <true/>
-                    <key>HideVerbose</key>
-                    <false/>
                     <key>LoadEarly</key>
                     <false/>
                     <key>Path</key>
@@ -1977,22 +1957,16 @@
             <dict>
                 <key>ClearScreenOnModeSwitch</key>
                 <false/>
-                <key>ConsoleFont</key>
-                <string></string>
                 <key>ConsoleMode</key>
                 <string></string>
                 <key>DirectGopRendering</key>
                 <false/>
                 <key>ForceResolution</key>
                 <false/>
-                <key>GopBurstMode</key>
-                <false/>
                 <key>GopPassThrough</key>
                 <string>Disabled</string>
                 <key>IgnoreTextInGraphics</key>
                 <false/>
-                <key>InitialMode</key>
-                <string>Auto</string>
                 <key>ProvideConsoleGop</key>
                 <true/>
                 <key>ReconnectGraphicsOnConnect</key>
@@ -2048,8 +2022,6 @@
                 <true/>
                 <key>OSInfo</key>
                 <false/>
-                <key>PciIo</key>
-                <false/>
                 <key>UnicodeCollation</key>
                 <false/>
             </dict>
@@ -2079,10 +2051,6 @@
                 <true/>
                 <key>ResizeGpuBars</key>
                 <integer>-1</integer>
-                <key>ResizeUsePciRbIo</key>
-                <false/>
-                <key>ShimRetainProtocol</key>
-                <false/>
                 <key>TscSyncTimeout</key>
                 <integer>0</integer>
                 <key>UnblockFsConnect</key>
@@ -2103,8 +2071,6 @@
                     <string>Reserved</string>
                 </dict>
             </array>
-            <key>Unload</key>
-            <array/>
         </dict>
     </dict>
 </plist>
